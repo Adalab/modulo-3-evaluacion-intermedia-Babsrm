@@ -1,24 +1,61 @@
 import '../styles/App.scss';
-//import { useEffect, useState } from 'react';
-//import callToApi from '../services/api';
+import { useState , useEffect } from 'react';
+// import adalaberList from '../data/adalabers.json';
+import callToApi from '../services/api';
 //import localStorage from '../services/localstorage';
 
-function App() {
-	/* Let's do magic! 🦄🦄🦄 */
+const App = () => {
 
 	const getTitle = (text) => <h1>Adalabers</h1>;
 
 	// api
+	const [name, setName] = useState('');
+	const [counselor, setCounselor] = useState('');
+	const [speciality, setSpeciality] = useState('');
+	const [data, setData] = useState([]);
 
-	//const [data, setData] = useState({});
-
-	/*
+	// funciones
+	const handleChangeName = (ev) => {
+		setName(ev.currentTarget.value);
+	};
+	const handleChangeCounselor = (ev) => {
+		setCounselor(ev.currentTarget.value);
+	};
+	const handleChangeSpeciality = (ev) => {
+		setSpeciality(ev.currentTarget.value);
+	};
+	const handleSubmit = (ev) => {
+		ev.preventDefault();
+	  const newAdalaber = {
+			name: name,
+			counselor: counselor,
+			speciality: speciality,
+		};
+		setData([...data, newAdalaber]);
+		setName('');
+		setCounselor('');
+		setSpeciality('');
+	};
+	/* llamar a la API*/
   useEffect(() => {
     callToApi().then((response) => {
-      data(response);
+      console.log(response);
+      setData(response);
     });
   }, []);
-  */
+  console.log(data);
+	const htmlAdalaber = data
+		// .filter(
+		//   (oneContact) =>
+		//     oneContact.name.toLowerCase().includes(search.toLowerCase()) ||
+		//     oneContact.lastname.toLowerCase().includes(search.toLowerCase()))  )
+		.map((adalaber, index) => (
+			<tr key={index}>
+				<td>{adalaber.name}</td>
+				<td>{adalaber.counselor}</td>
+				<td>{adalaber.speciality}</td>
+			</tr>
+		));
 
 	// local storage
 
@@ -43,69 +80,52 @@ function App() {
   */
 
 	return (
-		// HTML ✨
-
 		<div className="app">
 			{getTitle()}
 			<header>
 				<table>
-					{/* Fila de cabecera */}
 					<thead>
 						<tr>
-							<th>Columna 1</th>
-							<th>Columna 2</th>
-							<th>Columna 3</th>
+							<th>Nombre</th>
+							<th>Tutor</th>
+							<th>Especialidad</th>
 						</tr>
 					</thead>
-					{/* Fin fila de cabecera */}
-					<tbody>
-						{/* Primera fila */}
-						<tr>
-							<td>Columa 1 de la fila 1</td>
-							<td>Columa 2 de la fila 1</td>
-							<td>Columa 3 de la fila 1</td>
-						</tr>
-						{/* Segunda fila */}
-						<tr>
-							<td>Columa 1 de la fila 2</td>
-							<td>Columa 2 de la fila 2</td>
-							<td>Columa 3 de la fila 2</td>
-						</tr>
-					</tbody>
+					<tbody>{htmlAdalaber}</tbody>
 				</table>
 			</header>
 			{/* nueva adalaber */}
 			<main>
 				<form>
-					<h2>Añade un nuevo contacto</h2>
+					<h2>Añade una Adalaber</h2>
 					<input
 						type="text"
 						name="name"
 						id="name"
 						placeholder="Nombre"
-						// onChange={handleChangeName}
-						// value={name}
+						onChange={handleChangeName}
+						value={name}
 					/>
 					<input
 						type="text"
-						name="tutor"
-						id="tutor"
+						name="counselor"
+						id="counselor"
 						placeholder="Tutora"
-						// onChange={handleChangeLastName}
-						// value={lastName}
+						onChange={handleChangeCounselor}
+						value={counselor}
 					/>
 					<input
 						type="text"
 						name="speciality"
 						id="speciality"
 						placeholder="Especialidad"
-						// onChange={handleChangePhone}
-						// value={phone}
+						onChange={handleChangeSpeciality}
+						value={speciality}
 					/>
 					<input
 						type="submit"
 						value="Añadir una nueva Adalaber"
-						// onClick={handleClick}
+						onClick={handleSubmit}
 					/>
 				</form>
 			</main>
