@@ -1,20 +1,15 @@
 import '../styles/App.scss';
-import { useState , useEffect } from 'react';
-// import adalaberList from '../data/adalabers.json';
+import { useState, useEffect } from 'react';
 import callToApi from '../services/api';
-//import localStorage from '../services/localstorage';
 
 const App = () => {
-
 	const getTitle = (text) => <h1>Adalabers</h1>;
 
-	// api
 	const [name, setName] = useState('');
 	const [counselor, setCounselor] = useState('');
 	const [speciality, setSpeciality] = useState('');
 	const [data, setData] = useState([]);
 
-	// funciones
 	const handleChangeName = (ev) => {
 		setName(ev.currentTarget.value);
 	};
@@ -26,7 +21,7 @@ const App = () => {
 	};
 	const handleSubmit = (ev) => {
 		ev.preventDefault();
-	  const newAdalaber = {
+		const newAdalaber = {
 			name: name,
 			counselor: counselor,
 			speciality: speciality,
@@ -36,53 +31,24 @@ const App = () => {
 		setCounselor('');
 		setSpeciality('');
 	};
-	/* llamar a la API*/
-  useEffect(() => {
-    callToApi().then((response) => {
-      console.log(response);
-      setData(response);
-    });
-  }, []);
-  console.log(data);
-	const htmlAdalaber = data
-		// .filter(
-		//   (oneContact) =>
-		//     oneContact.name.toLowerCase().includes(search.toLowerCase()) ||
-		//     oneContact.lastname.toLowerCase().includes(search.toLowerCase()))  )
-		.map((adalaber, index) => (
-			<tr key={index}>
-				<td>{adalaber.name}</td>
-				<td>{adalaber.counselor}</td>
-				<td>{adalaber.speciality}</td>
-			</tr>
-		));
 
-	// local storage
-
-	//const [name, setName] = useState(localStorage.get('name', ''));
-	//const [email, setEmail] = useState(localStorage.get('email', ''));
-
-	//useState(localStorage.get('data', {}).name || '');
-	//useState(localStorage.get('data', {}).email || '');
-
-	/*
-  useEffect(() => {
-    localStorage.set('name', name);
-    localStorage.set('email', email);
-  }, [name, email]);
-  */
-
-	/*
-  localStorage.set('data', {
-    name: name,
-    email: email,
-  });
-  */
+	useEffect(() => {
+		callToApi().then((response) => {
+			setData(response);
+		});
+	}, []);
+	const htmlAdalaber = data.map((adalaber, index) => (
+		<tr key={index}>
+			<td>{adalaber.name}</td>
+			<td>{adalaber.counselor}</td>
+			<td>{adalaber.speciality}</td>
+		</tr>
+	));
 
 	return (
 		<div className="app">
-			{getTitle()}
 			<header>
+				{getTitle()}
 				<table>
 					<thead>
 						<tr>
@@ -94,7 +60,6 @@ const App = () => {
 					<tbody>{htmlAdalaber}</tbody>
 				</table>
 			</header>
-			{/* nueva adalaber */}
 			<main>
 				<form>
 					<h2>Añade una Adalaber</h2>
@@ -131,6 +96,6 @@ const App = () => {
 			</main>
 		</div>
 	);
-}
+};
 
 export default App;
